@@ -11,7 +11,7 @@ import type {
   UpdateBookInput,
 } from "./types";
 
-const dbPath = path.join(process.cwd(), "data", "antikvaari-poc.db");
+const dbPath = path.join(process.cwd(), "data", "pageops.db");
 
 function getDb() {
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });

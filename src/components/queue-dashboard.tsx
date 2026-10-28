@@ -65,12 +65,12 @@ export function QueueDashboard() {
       <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-medium uppercase tracking-wide text-[#343c27]/60">
-            Antikvaari työjono · POC
+            PageOps
           </p>
           <h1 className="font-serif text-3xl text-[#343c27]">Uudet kirjat myyntiin</h1>
           <p className="mt-1 max-w-2xl text-sm text-[#343c27]/70">
-            Skannaa tai syötä ISBN — rikastus, tarkistus ja puhelin-kuvatehtävät toimivat.
-            Julkaisu simuloidaan kunnes BookAPI-integraatio on valmis.
+            Skannaa tai syötä ISBN — rikastus, tarkistus ja puhelin-kuvatehtävät.
+            Julkaisu simuloidaan kunnes Antikvaari BookAPI on kytketty.
           </p>
         </div>
       </header>

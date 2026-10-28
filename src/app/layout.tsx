@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Antikvaari työjono · POC",
+  title: "PageOps",
   description:
-    "ISBN-jono, rikastus, puhelintehtävät ja julkaisun esikatselu (mock BookAPI).",
+    "ISBN queue, enrichment, and listing workflow for bookstore ops (Antikvaari-ready).",
 };
 
 export const viewport: Viewport = {
