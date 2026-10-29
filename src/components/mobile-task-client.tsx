@@ -52,8 +52,8 @@ export function MobileTaskClient() {
               Kuvat ja takateksti (POC) on tallennettu. Palaa työpöydälle tarkistamaan
               ilmoitus.
             </p>
-            <a href={`/books/${id}`} className="inline-block text-sm underline">
-              Avaa tarkistusnäkymä
+            <a href="/" className="inline-block text-sm underline">
+              Palaa työpöydälle
             </a>
           </CardContent>
         </Card>

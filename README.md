@@ -6,7 +6,7 @@
 
 | Area | Behavior |
 |------|----------|
-| **Dashboard** | Add ISBN to queue, filter by status, auto-refresh |
+| **Dashboard** | One screen: ISBN bar, queue, and the selected book's price, text, cover, shelf notes, and publish |
 | **Enrichment** | Open Library metadata + cover; mock Antikvaari market & pricing |
 | **Needs photo** | Mobile task when cover or description is missing |
 | **Mobile UI** | `/mobile/task/[id]` — cover + back upload (POC text extraction) |
