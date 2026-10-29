@@ -142,7 +142,7 @@ export function QueueDashboard({ initialBookId }: { initialBookId?: string }) {
       <header className="flex shrink-0 flex-col gap-3 border-b border-[#343c27]/10 bg-white px-4 py-3 sm:flex-row sm:items-center">
         <div className="shrink-0">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#343c27]/50">
-            PageOps
+            BookOps
           </p>
           <p className="text-sm text-[#343c27]/70">
             {loading ? "Ladataan…" : `${waiting} kesken · ${books.length} yhteensä`}

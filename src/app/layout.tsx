@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PageOps",
+  title: "BookOps",
   description:
-    "ISBN queue, enrichment, and listing workflow for bookstore ops (Antikvaari-ready).",
+    "ISBN queue, enrichment, and listing workflow for a bookstore selling on Antikvaari.",
 };
 
 export const viewport: Viewport = {
