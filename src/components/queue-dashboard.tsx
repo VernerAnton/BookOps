@@ -147,6 +147,13 @@ export function QueueDashboard({ initialBookId }: { initialBookId?: string }) {
           <p className="text-sm text-[#343c27]/70">
             {loading ? "Ladataan…" : `${waiting} kesken · ${books.length} yhteensä`}
           </p>
+          <a
+            href="/bookops-handoff.zip"
+            download="bookops-handoff.zip"
+            className="text-xs font-medium underline"
+          >
+            Lataa BookOps-paketti (zip)
+          </a>
         </div>
         <form onSubmit={addIsbn} className="flex min-w-0 flex-1 gap-2">
           <input
