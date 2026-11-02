@@ -1,0 +1,133 @@
+import type { Book } from "@/lib/types";
+
+const cover = (id: number) => `https://covers.openlibrary.org/b/id/${id}-L.jpg`;
+
+export function createSeed(): Book[] {
+  return [
+    {
+      id: "sample-1984",
+      isbn: "9780141036144",
+      title: "Nineteen Eighty-Four",
+      author: "George Orwell",
+      description:
+        "A clerk in a one-party state starts a private record and looks for a life the Party does not own. Sample description for the desk.",
+      coverUrl: cover(14368437),
+      coverSource: "Open Library",
+      backCoverUrl: null,
+      blurbSource: "Sample text",
+      condition: null,
+      quantity: 1,
+      location: "",
+      price: "9.50",
+      market: {
+        copies: 6,
+        lowest: 7.5,
+        conditionSpread: "K2–K4, mostly K3",
+        inPrint: true,
+        printNote: "Sample: treated as still in print.",
+      },
+      suggestion: {
+        low: 8.9,
+        high: 11,
+        recommend: 9.5,
+        reason:
+          "Sample: 6 copies visible, lowest 7,50 €. Still in print, so the recommendation undercuts the lowest ask instead of adding a scarcity lift.",
+      },
+      status: "ready",
+      listingNote: null,
+      scannedAt: "sample",
+    },
+    {
+      id: "sample-unknown",
+      isbn: "9789521111111",
+      title: "No record for this ISBN",
+      author: "Author missing",
+      description: "",
+      coverUrl: null,
+      coverSource: null,
+      backCoverUrl: null,
+      blurbSource: null,
+      condition: null,
+      quantity: 1,
+      location: "",
+      price: "",
+      market: {
+        copies: 0,
+        lowest: null,
+        conditionSpread: "No copies in the sample",
+        inPrint: null,
+        printNote: "Sample lookup found no print status.",
+      },
+      suggestion: null,
+      status: "needs_photo",
+      listingNote: null,
+      scannedAt: "sample",
+    },
+    {
+      id: "sample-clockwork",
+      isbn: "9780141182605",
+      title: "A Clockwork Orange",
+      author: "Anthony Burgess",
+      description:
+        "A violent young man is put through a state experiment that forces him to be good. Sample description for the desk.",
+      coverUrl: cover(14346710),
+      coverSource: "Open Library",
+      backCoverUrl: null,
+      blurbSource: "Sample text",
+      condition: null,
+      quantity: 1,
+      location: "Storage B",
+      price: "34.00",
+      market: {
+        copies: 2,
+        lowest: 28,
+        conditionSpread: "K3–K4",
+        inPrint: false,
+        printNote: "Sample: this edition is treated as out of print.",
+      },
+      suggestion: {
+        low: 32,
+        high: 40,
+        recommend: 34,
+        reason:
+          "Sample: 2 copies visible, lowest 28,00 €. Treated as out of print, so the range sits above the lowest ask. A new printing would have pulled it back down.",
+      },
+      status: "ready",
+      listingNote: null,
+      scannedAt: "sample",
+    },
+    {
+      id: "sample-pride",
+      isbn: "9780141439518",
+      title: "Pride and Prejudice",
+      author: "Jane Austen",
+      description:
+        "Two proud people in a small social world misread each other until the letters catch up. Sample description for a listing already accepted on this desk.",
+      coverUrl: cover(12645114),
+      coverSource: "Open Library",
+      backCoverUrl: null,
+      blurbSource: "Sample text",
+      condition: "K2",
+      quantity: 1,
+      location: "Shelf A-3",
+      price: "6.50",
+      market: {
+        copies: 11,
+        lowest: 5,
+        conditionSpread: "K1–K4",
+        inPrint: true,
+        printNote: "Sample: treated as still in print.",
+      },
+      suggestion: {
+        low: 5.5,
+        high: 8,
+        recommend: 6.5,
+        reason:
+          "Sample: 11 copies visible, lowest 5,00 €. Still in print, so the accepted price stays close to the lowest ask.",
+      },
+      status: "live",
+      listingNote: "Marked listed in this mock. Antikvaari was not contacted.",
+      scannedAt: "sample",
+    },
+  ];
+}
