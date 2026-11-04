@@ -22,6 +22,11 @@ export interface MarketSnapshot {
   highestPrice: number | null;
   listings: MarketListing[];
   searchedAt: string;
+  catalogUrl: string | null;
+  newItemCount: number;
+  usedItemCount: number;
+  sellerCount: number;
+  reason: string;
 }
 
 export interface BookRecord {

@@ -39,21 +39,19 @@ Next.js, TypeScript, Tailwind. Local SQLite at `data/bookops.db` (gitignored).
 |-------|--------|
 | Dashboard | One screen. ISBN field in the header. Queue on the left. Selected book on the right. |
 | Enrichment | Open Library title, author, description, and cover. Runs when an ISBN is added. |
-| Market and in-print | Mocked in `src/lib/enrichment.ts` so the UI can show a lowest price, a count, and a suggestion. |
+| Market and in-print | Live Antikvaari public search in `src/lib/antikvaari.ts`. Lowest price, copy count, seller count, and whether new copies are listed. |
 | Missing cover or text | Inline camera inputs on the same screen, plus `/mobile/task/[id]` for the shop floor. |
-| Back-cover OCR | Placeholder sentence in `mockExtractDescriptionFromPhotos`. |
-| Publish | Mock in `src/lib/antikvaari-mock.ts`. Sets status `live` and a fake listing URL. This is the file to replace. |
+| Back-cover photo | Stored. The blurb is typed by hand. |
+| Accept | Saves the draft as approved. BookAPI send is still not connected. |
 
-Run with `npm install` then `npm run dev -- -p 43123`. Sample ISBN: `9780141036144`. An unknown ISBN should land on “needs a photo.”
+Run with `npm install` then `npm run dev -- -p 43123`. Sample ISBN that is on Antikvaari: `9789519912066`.
 
 ## What to build next, in order
 
 1. Keep this UI. Do not split review, queue, and photos into separate menus again.
-2. Replace the market mock with a real Antikvaari ISBN search (prices, count, conditions).
-3. Replace the in-print guess and show the reason next to the suggested price.
-4. Read the blurb from the back-cover image.
-5. Replace `src/lib/antikvaari-mock.ts` with a BookAPI client that sends only the accepted snapshot. Capture a real add-product request from the merchant panel (a HAR file) before guessing endpoints.
-6. A USB barcode scanner should be able to type into the ISBN field and submit. No new screen.
+2. Read the blurb from the back-cover image.
+3. Replace the approved-draft stop with a BookAPI client that sends only the accepted snapshot. Capture a real add-product request from the merchant panel before guessing endpoints.
+4. A USB barcode scanner should be able to type into the ISBN field and press Enter. No new screen.
 
 Leave auto-publish, bulk edits of live listings, and order handling alone until Accept-then-publish is trustworthy.
 

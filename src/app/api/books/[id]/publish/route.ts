@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getBookById, savePublishResult, updateBook } from "@/lib/db";
-import { mockPublishToAntikvaari } from "@/lib/antikvaari-mock";
+import { getBookById, updateBook } from "@/lib/db";
 
 export async function POST(
   _request: Request,
@@ -10,28 +9,20 @@ export async function POST(
   const book = getBookById(id);
   if (!book) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  updateBook(id, { status: "publishing" });
-
-  try {
-    const { listingId, listingUrl } = await mockPublishToAntikvaari(book);
-    const updated = savePublishResult(id, {
-      status: "live",
-      antikvaariListingId: listingId,
-      antikvaariListingUrl: listingUrl,
-    });
-    return NextResponse.json({
-      book: updated,
-      mock: true,
-      message: "POC: Julkaisu simuloitu (Antikvaari BookAPI mock).",
-    });
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Julkaisu epäonnistui";
-    const updated = savePublishResult(id, {
-      status: "failed",
-      antikvaariListingId: "",
-      antikvaariListingUrl: "",
-      errorMessage: message,
-    });
-    return NextResponse.json({ book: updated, error: message }, { status: 422 });
+  if (!book.title || book.price == null || !book.condition) {
+    return NextResponse.json(
+      {
+        error: "Täytä otsikko, hinta ja kunto ennen hyväksyntää.",
+        book,
+      },
+      { status: 422 },
+    );
   }
+
+  const updated = updateBook(id, { status: "approved" });
+  return NextResponse.json({
+    book: updated,
+    message:
+      "Luonnos hyväksytty. Antikvaariin lähtö kytketään, kun BookAPI-tunnukset ovat käytössä. Hinta ja teksti pysyvät tässä vedoksessa.",
+  });
 }

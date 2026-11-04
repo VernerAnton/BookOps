@@ -1,59 +1,4 @@
 import { randomUUID } from "crypto";
-import type { ConditionGrade, MarketSnapshot } from "./types";
-
-function hashIsbn(isbn: string): number {
-  let h = 0;
-  for (let i = 0; i < isbn.length; i++) {
-    h = (h * 31 + isbn.charCodeAt(i)) >>> 0;
-  }
-  return h;
-}
-
-export function mockAntikvaariMarket(isbn: string): MarketSnapshot {
-  const h = hashIsbn(isbn);
-  const count = (h % 7) + 1;
-  const sellers = [
-    "Antikvariaatti Example",
-    "Kirjakauppa Pohjoinen",
-    "Divari Meri",
-    "Antologia Antikvaari",
-  ];
-  const conditions: ConditionGrade[] = ["K2", "K3", "K3", "K4", "K5"];
-  const listings = Array.from({ length: count }, (_, i) => {
-    const base = 5 + (h % 40) + i * 2.5;
-    return {
-      seller: sellers[(h + i) % sellers.length],
-      price: Math.round(base * 100) / 100,
-      condition: conditions[(h + i) % conditions.length],
-    };
-  }).sort((a, b) => a.price - b.price);
-
-  const prices = listings.map((l) => l.price);
-  return {
-    listingCount: listings.length,
-    lowestPrice: prices[0] ?? null,
-    highestPrice: prices[prices.length - 1] ?? null,
-    listings,
-    searchedAt: new Date().toISOString(),
-  };
-}
-
-export function mockInPrint(isbn: string): boolean {
-  return hashIsbn(isbn) % 3 !== 0;
-}
-
-export function suggestPriceRange(
-  market: MarketSnapshot,
-  inPrint: boolean,
-): { min: number; max: number; recommended: number } {
-  const anchor = market.lowestPrice ?? 12;
-  const scarcity = market.listingCount <= 2 ? 1.15 : 1;
-  const printFactor = inPrint ? 0.95 : 1.1;
-  const recommended = Math.round(anchor * scarcity * printFactor * 100) / 100;
-  const min = Math.round(recommended * 0.9 * 100) / 100;
-  const max = Math.round(recommended * 1.15 * 100) / 100;
-  return { min, max, recommended };
-}
 
 interface OpenLibraryWork {
   title?: string;
@@ -123,11 +68,4 @@ async function fetchAuthorFromWorks(isbn: string): Promise<string | null> {
 
 export function createMobileTaskToken(): string {
   return randomUUID().replace(/-/g, "").slice(0, 16);
-}
-
-export function mockExtractDescriptionFromPhotos(): string {
-  return (
-    "POC: Teksti poimittu takakannen kuvasta. Tarkista ja muokkaa tarvittaessa ennen julkaisua. " +
-    "Teos käsittelee aihetta laajasti; kansipaperit ja selkämys hyvässä kunnossa."
-  );
 }

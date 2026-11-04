@@ -106,14 +106,14 @@ export function QueueDashboard({ initialBookId }: { initialBookId?: string }) {
     await fetch(`/api/books/${draft.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload(draft, "approved")),
+      body: JSON.stringify(payload(draft, draft.status)),
     });
     const res = await fetch(`/api/books/${draft.id}/publish`, { method: "POST" });
     const data = await res.json();
     setDirty(false);
     if (data.book) select(data.book);
     setPublishing(false);
-    setMessage(res.ok ? "Julkaistu (mock)." : (data.error ?? "Julkaisu epäonnistui"));
+    setMessage(res.ok ? data.message : (data.error ?? "Hyväksyntä epäonnistui"));
     await load();
   }
 
@@ -131,11 +131,17 @@ export function QueueDashboard({ initialBookId }: { initialBookId?: string }) {
     });
     const data = await res.json();
     if (data.book) select(data.book);
-    setMessage(which === "back" ? "Takateksti poimittu." : "Kansikuva tallennettu.");
+    setMessage(
+      which === "back"
+        ? "Takakannen kuva tallennettu. Kirjoita kuvaus."
+        : "Kansikuva tallennettu.",
+    );
     await load();
   }
 
-  const waiting = books.filter((b) => b.status !== "live").length;
+  const waiting = books.filter(
+    (b) => b.status !== "live" && b.status !== "approved",
+  ).length;
 
   return (
     <div className="flex h-dvh flex-col bg-[#f8f7f3] text-[#343c27]">
@@ -369,22 +375,30 @@ export function QueueDashboard({ initialBookId }: { initialBookId?: string }) {
                   </Button>
                   <Button
                     onClick={publish}
-                    disabled={publishing || draft.status === "live"}
+                    disabled={
+                      publishing ||
+                      draft.status === "approved" ||
+                      draft.status === "live"
+                    }
                   >
-                    {publishing ? "Julkaistaan…" : "Hyväksy ja julkaise"}
+                    {publishing
+                      ? "Tallennetaan…"
+                      : draft.status === "approved"
+                        ? "Hyväksytty"
+                        : "Hyväksy luonnos"}
                   </Button>
                   {message ? (
                     <span className="text-sm text-[#343c27]/70">{message}</span>
                   ) : null}
                 </div>
-                {draft.antikvaariListingUrl ? (
+                {draft.market?.catalogUrl ? (
                   <a
                     className="block text-sm underline"
-                    href={draft.antikvaariListingUrl}
+                    href={draft.market.catalogUrl}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {draft.antikvaariListingUrl}
+                    Avaa vertailu Antikvaarissa
                   </a>
                 ) : null}
               </div>
@@ -409,19 +423,24 @@ export function QueueDashboard({ initialBookId }: { initialBookId?: string }) {
                   {draft.market ? (
                     <>
                       <p className="mt-2">
-                        {draft.market.listingCount} myynnissä · alin{" "}
+                        {draft.market.listingCount} kpl
+                        {draft.market.sellerCount
+                          ? ` · ${draft.market.sellerCount} myyjää`
+                          : ""}
+                        {" · alin "}
                         {draft.market.lowestPrice != null
                           ? formatEuro(draft.market.lowestPrice)
                           : "—"}
                       </p>
                       <p>
-                        Painossa:{" "}
+                        Uusia kappaleita:{" "}
                         {draft.inPrint == null
                           ? "—"
                           : draft.inPrint
-                            ? "kyllä"
+                            ? `${draft.market.newItemCount}`
                             : "ei"}
                       </p>
+                      <p className="mt-2 text-[#343c27]/80">{draft.market.reason}</p>
                       {draft.suggestedPriceMin != null &&
                       draft.suggestedPriceMax != null ? (
                         <p>
@@ -455,8 +474,8 @@ function payload(book: BookRecord, status: BookRecord["status"]) {
     title: book.title,
     author: book.author,
     description: book.description,
-    price: book.price,
-    condition: book.condition ?? "K3",
+    price: book.price ?? undefined,
+    condition: book.condition ?? undefined,
     internalQty: book.internalQty,
     internalLocation: book.internalLocation,
     internalNotes: book.internalNotes,

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getBookById, saveEnrichment } from "@/lib/db";
-import { mockExtractDescriptionFromPhotos } from "@/lib/enrichment";
 
 const bodySchema = z.object({
   coverDataUrl: z.string().optional(),
@@ -29,16 +28,25 @@ export async function POST(
     coverUrl = parsed.data.coverDataUrl;
   }
 
-  let description = target.description;
-  if (parsed.data.backDataUrl) {
-    description = mockExtractDescriptionFromPhotos();
-  }
+  const description = target.description;
+  const hasBackPhoto = Boolean(parsed.data.backDataUrl);
+  const ready = Boolean(coverUrl) && Boolean(description && description.length >= 40);
 
   const updated = saveEnrichment(target.id, {
-    status: "ready_for_review",
+    status: ready ? "ready_for_review" : "needs_photo",
+    title: target.title,
+    author: target.author,
+    description,
+    suggestedPriceMin: target.suggestedPriceMin,
+    suggestedPriceMax: target.suggestedPriceMax,
+    price: target.price,
     coverUrl,
     coverSource: parsed.data.coverDataUrl ? "mobile-camera" : target.coverSource,
-    description,
+    inPrint: target.inPrint,
+    market: target.market,
+    errorMessage: hasBackPhoto
+      ? "Takakannen kuva tallennettu. Kirjoita takateksti kuvaukseen."
+      : null,
   });
 
   return NextResponse.json({ book: updated });

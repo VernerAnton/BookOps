@@ -63,18 +63,17 @@ Internal notes (quantity on hand, storage location) stay in BookOps unless Antik
 
 ## What this repository does today
 
-This is a proof of concept. The desk workflow is real. Antikvaari itself is simulated.
+This is the desk MVP. One screen takes an ISBN, drafts the listing from real sources, and stores the accepted version. It does not log into Antikvaari.
 
 | Step | Today |
 |------|--------|
-| Add an ISBN | Works from the top of the dashboard. Enrichment starts immediately. |
-| One screen | Queue on the left. The selected book’s title, text, price, condition, cover, market note, quantity, and location are on the right. No separate review menu. |
-| Description and cover | [Open Library](https://openlibrary.org/) when it has the ISBN. |
-| Antikvaari prices and supply | Mocked from the ISBN, so the screen can show a lowest price, a count, and a suggestion. |
-| In print or not | A stand-in flag used only to move the suggested price. |
-| Missing cover or blurb | The same screen asks for a cover photo and a back-cover photo. There is also a phone page at `/mobile/task/[id]` for the shop floor. |
-| Back-cover text | Simulated. A real vision step replaces this later. |
-| Accept and publish | Mock BookAPI. The item is marked live and given a fake listing URL. The swap point is `src/lib/antikvaari-mock.ts`. |
+| Add an ISBN | Works from the top of the dashboard. Enrichment starts immediately. A barcode scanner that types into the field and sends Enter works as-is. |
+| One screen | Queue on the left. The selected book’s title, text, price, condition, cover, market note, quantity, and location are on the right. |
+| Description and cover | Antikvaari’s catalog text when the ISBN matches, otherwise [Open Library](https://openlibrary.org/). |
+| Antikvaari prices and supply | Live public search. Lowest price, how many copies, how many sellers, and a link to the catalog page. |
+| In print or not | Taken from whether Antikvaari currently lists new copies. That moves the suggested price, and the reason is written next to it. |
+| Missing cover or blurb | The same screen asks for a cover photo and a back-cover photo. There is also a phone page at `/mobile/task/[id]`. The back-cover photo is stored; the blurb is typed by hand until text recognition is added. |
+| Accept | Saves the draft as approved. Nothing is sent to Antikvaari until BookAPI credentials exist. |
 
 Data is a local SQLite file, `data/bookops.db`, which is not committed.
 
