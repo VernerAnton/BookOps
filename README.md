@@ -4,6 +4,8 @@ BookOps is an internal tool for a bookstore that sells on [Antikvaari.fi](https:
 
 The name is the job. Book operations, with a bit of the “get it done” feel of a small ops team.
 
+The direction for future work is [PLAN.md](PLAN.md). Read that before adding screens or a new publish path.
+
 ## Goal
 
 The boss should be able to scan a barcode and move on. BookOps does the slow lookup. A person still decides condition, how many copies there are, where they sit in the shop, and the final price. Nothing goes live on Antikvaari until that person accepts the draft.
@@ -79,14 +81,7 @@ Data is a local SQLite file, `data/bookops.db`, which is not committed.
 
 ## Plan
 
-1. **Prove the desk loop.** Done in this repo: scan, queue, draft, one-screen review, phone fallback, mock publish.
-2. **Replace the market mock.** Read live Antikvaari search results for that ISBN: lowest asks, how many copies, condition spread. Keep a browser agent here until there is a stable source.
-3. **Replace the in-print guess.** Use a publisher or bookstore source, and show why the suggestion moved (“3 copies on Antikvaari from €12”, “out of print”).
-4. **Real photos.** Store the cover the person approved. Read the blurb from the back-cover image instead of the placeholder sentence.
-5. **Real publish.** Log into BookAPI once, capture how a listing and an image are submitted (or get Antikvaari’s own format), and send only the accepted snapshot. Test on `dev-bookapi` first if that environment does not create a public listing.
-6. **Shop hardware.** A USB barcode scanner should be able to type into the ISBN field and submit. Same screen, no new menu.
-
-Out of scope until the loop above is trustworthy: auto-publish without Accept, bulk edits of listings that are already live, and orders.
+The build order, the publish rules, and what to leave alone are in [PLAN.md](PLAN.md).
 
 ## Run it
 
