@@ -1,6 +1,7 @@
 import { lookupAntikvaari, recommendedPrice } from "./antikvaari";
 import { createMobileTaskToken, fetchOpenLibrary } from "./enrichment";
 import { getBookById, saveEnrichment } from "./db";
+import { draftStatus } from "./listing";
 import type { BookRecord } from "./types";
 
 export async function runEnrichment(bookId: string): Promise<BookRecord | null> {
@@ -15,7 +16,7 @@ export async function runEnrichment(bookId: string): Promise<BookRecord | null> 
       fetchOpenLibrary(book.isbn),
     ]);
     const pricing = recommendedPrice(antik.market, antik.inPrint);
-    const title = antik.title || ol.title || `Teos (ISBN ${book.isbn})`;
+    const title = antik.title || ol.title;
     const author = antik.author || ol.author;
     const description = antik.description || ol.description;
     const coverUrl = antik.coverUrl || ol.coverUrl;
@@ -25,9 +26,7 @@ export async function runEnrichment(bookId: string): Promise<BookRecord | null> 
         ? "openlibrary"
         : null;
 
-    const missingCover = !coverUrl;
-    const missingDescription = !description || description.length < 40;
-    const status = missingCover || missingDescription ? "needs_photo" : "ready_for_review";
+    const status = draftStatus({ coverUrl, description });
 
     return saveEnrichment(bookId, {
       status,
@@ -47,7 +46,7 @@ export async function runEnrichment(bookId: string): Promise<BookRecord | null> 
           : book.mobileTaskToken,
     });
   } catch (e) {
-    const message = e instanceof Error ? e.message : "Rikastus epäonnistui";
+    const message = e instanceof Error ? e.message : "The lookup failed";
     return saveEnrichment(bookId, {
       status: "failed",
       errorMessage: message,

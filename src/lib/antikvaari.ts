@@ -56,7 +56,7 @@ interface SelectedOffer {
 export async function lookupAntikvaari(isbnRaw: string): Promise<AntikvaariHit> {
   const isbn = normalizeIsbn(isbnRaw);
   const searchedAt = new Date().toISOString();
-  const empty = emptyHit(searchedAt, "ISBN:llä ei löytynyt Antikvaari-osumaa. Aseta hinta käsin.");
+  const empty = emptyHit(searchedAt, "No Antikvaari match for this ISBN. Set the price yourself.");
 
   if (isbn.length < 10) return empty;
 
@@ -173,7 +173,7 @@ function hitFromCatalog(
   const priced = suggest(lowest, supply, inPrint);
   const reason = exactIsbn
     ? priced.reason
-    : `${priced.reason} Katalogissa ei ollut samaa ISBN:ää, osuma on haun ainoa tulos.`;
+    : `${priced.reason} The catalog page has no matching ISBN; this was the only search result.`;
 
   const image = page.catalog.catalog_img?.url ?? null;
   const coverUrl = image && !image.includes("no-image") ? image : null;
@@ -210,7 +210,7 @@ function suggest(
 ): { reason: string } {
   if (lowest == null) {
     return {
-      reason: "Antikvaari-sivu löytyi, mutta alin hinta puuttui. Aseta hinta käsin.",
+      reason: "Found the Antikvaari page, but no lowest price. Set the price yourself.",
     };
   }
   const scarce = supply > 0 && supply <= 2;
@@ -220,12 +220,12 @@ function suggest(
   else if (supply >= 8) factor *= 0.9;
   const recommended = roundEuro(lowest * factor);
   const printText = inPrint
-    ? "Myynnissä on myös uusia kappaleita, joten ehdotus on hieman alimman alle."
+    ? "New copies are also on sale, so the suggestion sits a little under the lowest ask."
     : scarce
-      ? "Uusia kappaleita ei ole ja tarjonta on niukka, joten ehdotus on alinta korkeampi."
-      : "Vain käytettyjä kappaleita.";
+      ? "No new copies and supply is thin, so the suggestion sits above the lowest ask."
+      : "Only used copies are listed.";
   return {
-    reason: `Antikvaarissa ${supply} kpl, alin ${formatPlain(lowest)} €. ${printText} Ehdotus ${formatPlain(recommended)} €.`,
+    reason: `${supply} on Antikvaari, lowest ${formatPlain(lowest)} €. ${printText} Suggested ${formatPlain(recommended)} €.`,
   };
 }
 

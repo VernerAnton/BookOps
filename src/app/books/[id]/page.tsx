@@ -1,4 +1,4 @@
-import { QueueDashboard } from "@/components/queue-dashboard";
+import { Desk } from "@/components/desk";
 
 export const instant = false;
 
@@ -8,5 +8,5 @@ export default async function BookReviewPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <QueueDashboard initialBookId={id} />;
+  return <Desk initialBookId={id} />;
 }

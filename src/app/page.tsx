@@ -1,5 +1,5 @@
-import { QueueDashboard } from "@/components/queue-dashboard";
+import { Desk } from "@/components/desk";
 
 export default function HomePage() {
-  return <QueueDashboard />;
+  return <Desk />;
 }

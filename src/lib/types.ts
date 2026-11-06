@@ -45,6 +45,7 @@ export interface BookRecord {
   internalNotes: string | null;
   coverUrl: string | null;
   coverSource: string | null;
+  backCoverUrl: string | null;
   inPrint: boolean | null;
   market: MarketSnapshot | null;
   antikvaariListingId: string | null;
@@ -63,7 +64,7 @@ export interface UpdateBookInput {
   title?: string;
   author?: string;
   description?: string;
-  price?: number;
+  price?: number | null;
   condition?: ConditionGrade;
   internalQty?: number;
   internalLocation?: string;

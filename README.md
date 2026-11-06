@@ -67,13 +67,13 @@ This is the desk MVP. One screen takes an ISBN, drafts the listing from real sou
 
 | Step | Today |
 |------|--------|
-| Add an ISBN | Works from the top of the dashboard. Enrichment starts immediately. A barcode scanner that types into the field and sends Enter works as-is. |
-| One screen | Queue on the left. The selected book’s title, text, price, condition, cover, market note, quantity, and location are on the right. |
+| Add an ISBN | The scan bay at the top of the desk. The lookup starts immediately. A barcode scanner that types into the field and sends Enter works as-is. |
+| One screen | Queue on the left. The selected book’s progress (scan → market → print → copy → photo → accept), title, text, price, K1–K5 condition, cover, market note, quantity, shelf, and staff note are on the right. Edits save as you type. Dark and light themes. |
 | Description and cover | Antikvaari’s catalog text when the ISBN matches, otherwise [Open Library](https://openlibrary.org/). |
 | Antikvaari prices and supply | Live public search. Lowest price, how many copies, how many sellers, and a link to the catalog page. |
 | In print or not | Taken from whether Antikvaari currently lists new copies. That moves the suggested price, and the reason is written next to it. |
-| Missing cover or blurb | The same screen asks for a cover photo and a back-cover photo. There is also a phone page at `/mobile/task/[id]`. The back-cover photo is stored; the blurb is typed by hand until text recognition is added. |
-| Accept | Saves the draft as approved. Nothing is sent to Antikvaari until BookAPI credentials exist. |
+| Missing cover or blurb | The same screen asks for a cover photo and a back-cover photo. There is also a phone page at `/mobile/task/[id]`. Photos are resized in the browser before upload. The back-cover photo is stored and shown next to the draft; the blurb is typed by hand until text recognition is added. A draft counts as ready once it has a cover and a blurb of at least 40 characters. |
+| Accept | Needs a title, a final price, a condition, a cover, and a blurb. Saves the draft as approved and locks it: the API refuses further edits. Nothing is sent to Antikvaari until BookAPI credentials exist. |
 
 Data is a local SQLite file, `data/bookops.db`, which is not committed.
 

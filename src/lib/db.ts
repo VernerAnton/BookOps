@@ -38,6 +38,7 @@ function initDb(db: Database.Database) {
       internal_notes TEXT,
       cover_url TEXT,
       cover_source TEXT,
+      back_cover_url TEXT,
       in_print INTEGER,
       market_json TEXT,
       antikvaari_listing_id TEXT,
@@ -51,6 +52,10 @@ function initDb(db: Database.Database) {
     CREATE INDEX IF NOT EXISTS idx_books_isbn ON books(isbn);
     CREATE INDEX IF NOT EXISTS idx_books_mobile_token ON books(mobile_task_token);
   `);
+  const columns = db.prepare("PRAGMA table_info(books)").all() as { name: string }[];
+  if (!columns.some((column) => column.name === "back_cover_url")) {
+    db.exec("ALTER TABLE books ADD COLUMN back_cover_url TEXT");
+  }
 }
 
 type Row = {
@@ -69,6 +74,7 @@ type Row = {
   internal_notes: string | null;
   cover_url: string | null;
   cover_source: string | null;
+  back_cover_url: string | null;
   in_print: number | null;
   market_json: string | null;
   antikvaari_listing_id: string | null;
@@ -96,6 +102,7 @@ function rowToBook(row: Row): BookRecord {
     internalNotes: row.internal_notes,
     coverUrl: row.cover_url,
     coverSource: row.cover_source,
+    backCoverUrl: row.back_cover_url,
     inPrint: row.in_print === null ? null : row.in_print === 1,
     market: row.market_json
       ? (JSON.parse(row.market_json) as MarketSnapshot)
@@ -254,6 +261,37 @@ export function saveEnrichment(
     data.mobileTaskToken ?? null,
     data.errorMessage ?? null,
     now,
+    id,
+  );
+  db.close();
+  return getBookById(id);
+}
+
+export function savePhotos(
+  id: string,
+  data: {
+    status: BookStatus;
+    coverUrl: string | null;
+    coverSource: string | null;
+    backCoverUrl: string | null;
+  },
+): BookRecord | null {
+  const db = getDb();
+  initDb(db);
+  db.prepare(
+    `UPDATE books SET
+      status = ?,
+      cover_url = ?,
+      cover_source = ?,
+      back_cover_url = ?,
+      updated_at = ?
+     WHERE id = ?`,
+  ).run(
+    data.status,
+    data.coverUrl,
+    data.coverSource,
+    data.backCoverUrl,
+    new Date().toISOString(),
     id,
   );
   db.close();
